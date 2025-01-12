@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-python-scheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-python-scheduler
+  template:
+    metadata:
+      labels:
+        app: simple-python-scheduler
+    spec:
+      containers:
+      - name: simple-python-scheduler
+        image: simple-python-scheduler:latest
