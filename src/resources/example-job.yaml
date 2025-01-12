@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+  namespace: test-ns
+spec:
+  template:
+    metadata:
+      annotations:
+        priority: "200"
+    spec:
+      schedulerName: simple-python-scheduler
+      containers:
+      - name: pi
+        image: perl:5.34.0
+        command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never
+  parallelism: 4
+  backoffLimit: 4

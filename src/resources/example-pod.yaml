@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: foobar-sched-2
+  namespace: test-ns
+  annotations:
+    priority: "2"
+spec:
+  schedulerName: simple-python-scheduler
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
