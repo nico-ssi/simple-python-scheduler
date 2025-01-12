@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from os import name
+import os
 import time
 import random
 import json
@@ -12,7 +12,7 @@ v1 = client.CoreV1Api()
 batch1 = client.BatchV1Api()
 
 scheduler_name = "simple-python-scheduler"
-NAMESPACE = "test-ns"
+NAMESPACE = os.environ.get("NAMESPACE", "test-ns")
 
 
 def nodes_available():
@@ -47,14 +47,14 @@ def preemption(priority):
 
 
 def get_free_slots(priority):
-    slots = 0
+    slots = len(nodes_available())
     for pod in get_running_pods():
         try:
             pod_priority = pod.metadata.annotations["priority"]
         except:
-            slots += 1
+            pass
         if int(pod_priority) < int(priority):
-            slots += 1
+            slots -= 1
     return slots
 
 
@@ -74,6 +74,7 @@ def scheduler(object, priority, node, namespace=NAMESPACE):
     target = client.V1ObjectReference(kind="Node", api_version="v1", name=node)
     meta = client.V1ObjectMeta(name=name)
     body = client.V1Binding(target=target, metadata=meta)
+    print(f"Binding: {name}, to: {node}")
     return v1.create_namespaced_binding(
         namespace=namespace, body=body, _preload_content=False
     )
@@ -81,6 +82,7 @@ def scheduler(object, priority, node, namespace=NAMESPACE):
 
 def main():
     w = watch.Watch()
+    print(f"Starting the scheduler, watching namespace {NAMESPACE}")
     for event in w.stream(v1.list_namespaced_pod, NAMESPACE):
         if (
             event["object"].status.phase == "Pending"

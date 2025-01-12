@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: foobar-sched-2
+  name: foobar-sched-1
   namespace: test-ns
   annotations:
-    priority: "2"
+    priority: "1"
 spec:
   schedulerName: simple-python-scheduler
   containers:

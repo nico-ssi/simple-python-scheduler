@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: simple-python-scheduler
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -14,4 +15,7 @@ spec:
     spec:
       containers:
       - name: simple-python-scheduler
-        image: simple-python-scheduler:latest
+        image: {{ .Values.image }}
+        env:
+          - name: NAMESPACE
+            value: {{ .Values.monitoredNamespace }}
