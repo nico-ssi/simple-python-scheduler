@@ -4,5 +4,5 @@
 
 replicaCount: 1
 
-image: ghcr.io/dotanalon/simple-python-scheduler:main
+image: ghcr.io/nico-ssi/simple-python-scheduler:main
 monitoredNamespace: test-ns
